@@ -15,8 +15,8 @@ function visit(node, tagNames, handler) {
 
 export const parseMeta =
   ({ defaultShowCopyCode }) =>
-  (tree) => {
-    visit(tree, ['pre'], (preEl) => {
+  tree => {
+    visit(tree, ['pre'], preEl => {
       const [codeEl] = preEl.children
 
       // Add default language `text` for code-blocks without languages
@@ -31,8 +31,8 @@ export const parseMeta =
     })
   }
 
-export const attachMeta = () => (tree) => {
-  visit(tree, ['div', 'pre'], (node) => {
+export const attachMeta = () => tree => {
+  visit(tree, ['div', 'pre'], node => {
     if ('data-rehype-pretty-code-fragment' in node.properties) {
       // remove <div data-rehype-pretty-code-fragment /> element that wraps <pre /> element
       // because we'll wrap with our own <div />

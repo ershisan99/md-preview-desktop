@@ -9,8 +9,9 @@ import { BundledMdx } from './types'
 
 export const bundleMdx = async (source: string): Promise<BundledMdx> => {
   return await bundleMDX({
-    source,
-    globals: {},
+    globals: {
+      components: '@it-incubator/mdx-components',
+    },
     mdxOptions(options) {
       options.rehypePlugins = [
         ...(options.rehypePlugins ?? []),
@@ -19,7 +20,13 @@ export const bundleMdx = async (source: string): Promise<BundledMdx> => {
         [
           rehypePrettyCode,
           {
-            theme,
+            filterMetaString: (meta: string) => meta.replace(CODE_BLOCK_FILENAME_REGEX, ''),
+            onVisitHighlightedChars(node: any) {
+              node.properties.className = ['highlighted']
+            },
+            onVisitHighlightedLine(node: any) {
+              node.properties.className.push('highlighted')
+            },
             onVisitLine(node: any) {
               // Prevent lines from collapsing in `display: grid` mode, and
               // allow empty lines to be copy/pasted
@@ -27,19 +34,14 @@ export const bundleMdx = async (source: string): Promise<BundledMdx> => {
                 node.children = [{ type: 'text', value: ' ' }]
               }
             },
-            onVisitHighlightedLine(node: any) {
-              node.properties.className.push('highlighted')
-            },
-            onVisitHighlightedChars(node: any) {
-              node.properties.className = ['highlighted']
-            },
-            filterMetaString: (meta: string) => meta.replace(CODE_BLOCK_FILENAME_REGEX, '')
-          }
+            theme,
+          },
         ],
-        attachMeta
+        attachMeta,
       ]
 
       return options
-    }
+    },
+    source,
   })
 }

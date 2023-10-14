@@ -1,11 +1,10 @@
 import { resolve } from 'path'
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
+
 import react from '@vitejs/plugin-react'
+import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 
 export default defineConfig({
   main: {
-    // plugins: [externalizeDepsPlugin({ exclude: ['@it-incubator/md-bundler', 'builtin-modules'] })],
-    plugins: [externalizeDepsPlugin({ exclude: ['rehype-slug'] })],
     build: {
       rollupOptions: {
         // external: ['builtin-modules'],
@@ -22,18 +21,20 @@ export default defineConfig({
         //     }
         //   }
         // }
-      }
-    }
+      },
+    },
+    // plugins: [externalizeDepsPlugin({ exclude: ['@it-incubator/md-bundler', 'builtin-modules'] })],
+    plugins: [externalizeDepsPlugin({ exclude: ['rehype-slug'] })],
   },
   preload: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: [externalizeDepsPlugin()],
   },
   renderer: {
+    plugins: [react()],
     resolve: {
       alias: {
-        '@renderer': resolve('src/renderer/src')
-      }
+        '@renderer': resolve('src/renderer/src'),
+      },
     },
-    plugins: [react()]
-  }
+  },
 })

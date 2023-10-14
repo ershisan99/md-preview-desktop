@@ -1,33 +1,37 @@
-import { app, shell, BrowserWindow } from 'electron'
-import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
-import path from 'node:path'
 import fs from 'fs'
+import path from 'node:path'
+import { join } from 'path'
+
+import { electronApp, is, optimizer } from '@electron-toolkit/utils'
+import { BrowserWindow, app, ipcMain, shell } from 'electron'
+
+import icon from '../../resources/icon.png?asset'
 import { bundleMdx } from './bundle-mdx'
 const chokidar = require('chokidar')
 
 let mainWindow: BrowserWindow | null = null
+
 function createWindow(): void {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 900,
+    autoHideMenuBar: true,
     height: 670,
     show: false,
-    autoHideMenuBar: true,
+    width: 900,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
-    }
+      sandbox: false,
+    },
   })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show()
   })
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
+  mainWindow.webContents.setWindowOpenHandler(details => {
     shell.openExternal(details.url)
+
     return { action: 'deny' }
   })
 
@@ -59,7 +63,9 @@ app.whenReady().then(() => {
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow()
+    }
   })
 })
 
@@ -71,32 +77,57 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-console.log('dirname', __dirname)
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
-const watcher = chokidar.watch(path.resolve(__dirname, '../../../hello.md'), {
-  ignored: /(^|[\/\\])\../, // ignore dotfiles
-  persistent: true
-})
 
-// Something to use when events are received.
-const log = console.log.bind(console)
-// Add event listeners.
-watcher
-  .on('add', (path) => log(`File ${path} has been added`))
-  .on('change', (path) => {
+let watcher: any = null
+
+function setupWatcher(filePath: string) {
+  // Close the existing watcher if it exists
+  if (watcher) {
+    watcher.close()
+  }
+
+  watcher = chokidar.watch(filePath, {
+    ignored: /(^|[/\\])\../, // ignore dotfiles
+    persistent: true,
+  })
+
+  const bundleAndSend = async (path: string) => {
     fs.readFile(path, 'utf8', async (err, content) => {
       if (err) {
         console.error('Error reading the file:', err)
+
         return
       }
-      console.log('content', content)
       // Send file content to renderer
       if (mainWindow && !mainWindow.isDestroyed()) {
         const bundled = await bundleMdx(content)
-        // const toc = generateToc(content, {})
-        mainWindow.webContents.send('file-changed', bundled)
+
+        mainWindow.webContents.send('file-changed', { ...bundled, fileName: path })
       }
     })
-  })
-  .on('unlink', (path) => log(`File ${path} has been removed`))
+    await shell.openPath(path)
+  }
+
+  // Add your event listeners
+  watcher
+    .on('add', async (path: string) => {
+      await bundleAndSend(path)
+
+      console.warn(`File ${path} has been added`)
+    })
+    .on('change', bundleAndSend)
+    .on('unlink', (path: string) => console.warn(`File ${path} has been removed`))
+}
+
+ipcMain.on('dropped-file', (event, arg) => {
+  console.warn('Dropped File(s):', arg)
+  event.returnValue = `Received ${arg.length} paths.` // Synchronous reply
+
+  // Assuming the user only dropped one file, update the watcher to watch that file.
+  if (arg.length > 0) {
+    setupWatcher(arg[0])
+  }
+})
+
+// Initially setup watcher for 'hello.md'
+setupWatcher(path.resolve(__dirname, '../../../hello.md'))

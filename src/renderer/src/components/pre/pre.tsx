@@ -3,8 +3,9 @@ import { ComponentProps, ReactElement, useRef } from 'react'
 import { Scrollbar } from '@it-incubator/ui-kit'
 import { clsx } from 'clsx'
 
-import { CopyToClipboard } from './copy-to-clipboard'
 import styles from './pre.module.scss'
+
+import { CopyToClipboard } from './copy-to-clipboard'
 export const Pre = ({
   children,
   className,

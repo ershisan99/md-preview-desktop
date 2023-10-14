@@ -1,11 +1,11 @@
-import type { ComponentProps, ReactElement } from 'react'
-import { useCallback, useEffect, useState } from 'react'
+import { ComponentProps, ReactElement, useCallback, useEffect, useState } from 'react'
 
 import { clsx } from 'clsx'
 
+import s from './copy-to-clipboard.module.scss'
+
 import { CheckIcon } from './check'
 import { CopyIcon } from './copy'
-import s from './copy-to-clipboard.module.scss'
 
 export const CopyToClipboard = ({
   getValue,
@@ -16,7 +16,9 @@ export const CopyToClipboard = ({
   const [isCopied, setCopied] = useState(false)
 
   useEffect(() => {
-    if (!isCopied) return
+    if (!isCopied) {
+      return
+    }
     const timerId = setTimeout(() => {
       setCopied(false)
     }, 2000)
@@ -41,7 +43,7 @@ export const CopyToClipboard = ({
   const IconToUse = isCopied ? CheckIcon : CopyIcon
 
   return (
-    <button onClick={handleClick} className={s.button} title="Copy code" tabIndex={0} {...props}>
+    <button className={s.button} onClick={handleClick} tabIndex={0} title={'Copy code'} {...props}>
       <IconToUse className={clsx('nextra-copy-icon', s.root)} />
     </button>
   )
