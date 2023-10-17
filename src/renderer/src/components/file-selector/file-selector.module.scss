@@ -1,0 +1,17 @@
+.container {
+  > [class*='tree'] {
+    margin-top: 0;
+    > [class*='container'] {
+      border: none;
+    }
+  }
+}
+
+.fileCustomLabel {
+  all: unset;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 1px solid var(--mdx-color-outline-focus);
+  }
+}

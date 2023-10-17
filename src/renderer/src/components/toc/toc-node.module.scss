@@ -1,0 +1,23 @@
+.list {
+  padding-left: 0.5rem;
+  list-style: none;
+}
+
+.link {
+  all: unset;
+  cursor: pointer;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-m);
+
+  &[data-depth='1'] {
+    font-weight: var(--font-weight-semi-bold);
+  }
+
+  &[data-depth='2'] {
+    font-weight: var(--font-weight-regular);
+  }
+
+  &.active {
+    color: var(--color-accent-500);
+  }
+}

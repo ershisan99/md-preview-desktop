@@ -1,0 +1,35 @@
+.page {
+  width: 100%;
+  padding: 22px 0 43px;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 200px minmax(65ch, 100%) 190px;
+
+  width: 100%;
+
+  background-color: var(--color-light-mode-100);
+  border: 1px solid var(--color-border-primary);
+
+  :global(.dark-mode) & {
+    background-color: var(--color-dark-mode-600);
+  }
+
+  > div {
+    flex-shrink: 0;
+  }
+
+  > :first-child {
+    border-right: 1px solid var(--color-border-primary);
+  }
+
+  > :last-child {
+    border-left: 1px solid var(--color-border-primary);
+  }
+}
+
+.root {
+  overflow: auto;
+  padding: 31px 24px;
+}

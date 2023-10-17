@@ -1,0 +1,36 @@
+.scrollbar {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(1.5rem + var(--header-height));
+
+  position: initial !important;
+
+  overflow: auto;
+
+  height: 100%;
+  padding-top: var(--header-height);
+
+  > div[class*='scrollbar'] {
+    margin-top: var(--header-height);
+  }
+
+  @media screen and (width <= 768px) {
+    padding-left: 0;
+  }
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+
+  max-width: 1186px;
+  height: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  @media screen and (width <= 1300px) {
+    padding: 0 20px;
+  }
+
+  @media screen and (width <= 768px) {
+    padding: 0 16px;
+  }
+}
