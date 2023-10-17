@@ -180,10 +180,6 @@
         padding-inline: 1rem;
       }
     }
-
-    &:not([data-theme]) {
-      @apply px-4;
-    }
   }
 
   & img {

@@ -3,10 +3,10 @@ import path from 'node:path'
 import { join } from 'path'
 
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
+import { bundleMdx } from '@it-incubator/md-bundler'
 import { BrowserWindow, app, ipcMain, shell } from 'electron'
 
 import icon from '../../resources/icon.png?asset'
-import { bundleMdx } from './bundle-mdx'
 const chokidar = require('chokidar')
 
 let mainWindow: BrowserWindow | null = null
