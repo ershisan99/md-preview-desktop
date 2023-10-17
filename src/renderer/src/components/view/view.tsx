@@ -29,10 +29,11 @@ export const View = ({ setFileName }) => {
 
   useEffect(() => {
     const contentListener: IpcRendererListener = (_event, content) => {
-      setCode(content.code)
-      setFileName(content.fileName)
-      setSelectedFile(content.fileName)
-      setToc(content.toc)
+      if (!content) return
+      setCode(content?.code)
+      setFileName(content?.fileName)
+      setSelectedFile(content?.fileName)
+      setToc(content?.toc)
     }
 
     const directoryContentsListener: IpcRendererListener = (_event, content) => {
