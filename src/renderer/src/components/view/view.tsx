@@ -6,10 +6,10 @@ import { ImagePreview } from '@it-incubator/ui-kit'
 
 import s from './view.module.scss'
 
-import { FileOrDirectory, MdxFileSelector } from '../file-selector/file-selector'
+import { FileOrDirectory, MdxFileSelector } from '../file-selector'
 import { TableOfContents } from '../toc'
 
-export const View = ({ setFileName }) => {
+export const View = () => {
   const [selectedFile, setSelectedFile] = useState<string>('')
   const [code, setCode] = useState<string>('')
   const [toc, setToc] = useState<any>({})
@@ -29,9 +29,10 @@ export const View = ({ setFileName }) => {
 
   useEffect(() => {
     const contentListener: IpcRendererListener = (_event, content) => {
-      if (!content) return
+      if (!content) {
+        return
+      }
       setCode(content?.code)
-      setFileName(content?.fileName)
       setSelectedFile(content?.fileName)
       setToc(content?.toc)
     }

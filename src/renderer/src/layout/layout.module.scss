@@ -34,3 +34,16 @@
     padding: 0 16px;
   }
 }
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-inline: 20px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
