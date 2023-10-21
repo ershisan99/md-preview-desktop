@@ -62,7 +62,7 @@ export const View = () => {
     <div className={s.page}>
       <ImagePreview onClose={() => setSrcPreview('')} open={!!srcPreview} src={srcPreview} />
       <div className={s.container}>
-        <div>
+        <div className={s.fileSelectorContainer}>
           {directoryContents && (
             <MdxFileSelector
               data={directoryContents.data}
@@ -74,7 +74,7 @@ export const View = () => {
         <Prose as={'article'} className={s.root}>
           <MdxComponent code={code} onImageClick={setSrcPreview} />
         </Prose>
-        <div>
+        <div className={s.tocContainer}>
           <TableOfContents tocMap={toc?.map} />
         </div>
       </div>
