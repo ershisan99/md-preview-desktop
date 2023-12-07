@@ -96,18 +96,40 @@ let watcher: any = null
 let currentContent: any = null
 
 function setupWatcher(filePath: string) {
-  store.set('lastFilePath', filePath)
+  const isDir = fs.statSync(filePath).isDirectory()
+
+  store.set(isDir ? 'lastOpenDir' : 'lastFilePath', filePath)
   // Close the existing watcher if it exists
   if (watcher) {
     watcher.close()
   }
 
   watcher = chokidar.watch(filePath, {
-    ignored: /(^|[/\\])\../, // ignore dotfiles
+    ignored: path => {
+      if (path.includes('node_modules')) {
+        return true
+      }
+
+      // Ignore if it's not a directory and does not end with .mdx
+      return !path.endsWith('.mdx') && !fs.lstatSync(path).isDirectory()
+    },
     persistent: true,
   })
 
   const bundleAndSend = async (path: string) => {
+    if (isDir) {
+      const lastOpenDir = store.get('lastOpenDir') as string | undefined
+
+      if (!lastOpenDir) {
+        return
+      }
+
+      prepareAndSendDir(lastOpenDir)
+
+      return
+    }
+
+    console.log('change', path)
     fs.readFile(path, 'utf8', async (err, content) => {
       if (err) {
         console.error('Error reading the file:', err)
@@ -132,15 +154,40 @@ function setupWatcher(filePath: string) {
   // Add your event listeners
   watcher
     .on('add', async (path: string) => {
+      console.log('file added', path)
       await bundleAndSend(path)
 
       console.warn(`File ${path} has been added`)
     })
+    .on('addDir', async () => {
+      console.log('add dir')
+      const lastOpenDir = store.get('lastOpenDir') as string | undefined
+
+      if (!lastOpenDir) {
+        return
+      }
+
+      prepareAndSendDir(lastOpenDir)
+    })
+    .on('unlinkDir', async () => {
+      const lastOpenDir = store.get('lastOpenDir') as string | undefined
+
+      if (!lastOpenDir) {
+        return
+      }
+
+      prepareAndSendDir(lastOpenDir)
+    })
     .on('change', bundleAndSend)
     .on('unlink', (path: string) => console.warn(`File ${path} has been removed`))
+
+  const watchedPaths = watcher.getWatched()
+
+  console.log(watchedPaths)
 }
 
 function prepareAndSendDir(dir: string) {
+  console.log('prepareAndSendDir', dir)
   const files = fs.readdirSync(dir)
   const dirName = path.basename(dir)
   const data = [
@@ -175,6 +222,7 @@ ipcMain.on('dropped-file', (event, arg) => {
     if (fs.statSync(pathToCheck).isDirectory()) {
       // If it's a directory, get the list of files
       prepareAndSendDir(pathToCheck)
+      setupWatcher(pathToCheck)
     } else {
       setupWatcher(pathToCheck)
     }

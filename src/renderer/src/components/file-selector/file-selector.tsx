@@ -20,6 +20,8 @@ type Props = {
   setSelectedMdx: (s: string) => void
 }
 export const MdxFileSelector = ({ data, selectedMdx, setSelectedMdx }: Props) => {
+  console.log(data)
+
   return (
     <div className={s.container}>
       <FileTree>

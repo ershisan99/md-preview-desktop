@@ -38,6 +38,7 @@ export const View = () => {
     }
 
     const directoryContentsListener: IpcRendererListener = (_event, content) => {
+      console.log('directoryContentsListener', content)
       setDirectoryContents(content)
     }
 
@@ -54,10 +55,6 @@ export const View = () => {
     }
   }, [])
 
-  if (!code) {
-    return null
-  }
-
   return (
     <div className={s.page}>
       <ImagePreview onClose={() => setSrcPreview('')} open={!!srcPreview} src={srcPreview} />
@@ -72,7 +69,7 @@ export const View = () => {
           )}
         </div>
         <Prose as={'article'} className={s.root}>
-          <MdxComponent code={code} onImageClick={setSrcPreview} />
+          {code && <MdxComponent code={code} onImageClick={setSrcPreview} />}
         </Prose>
         <div className={s.tocContainer}>
           <TableOfContents tocMap={toc?.map} />
