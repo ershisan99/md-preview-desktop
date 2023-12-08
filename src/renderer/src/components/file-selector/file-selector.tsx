@@ -20,8 +20,6 @@ type Props = {
   setSelectedMdx: (s: string) => void
 }
 export const MdxFileSelector = ({ data, selectedMdx, setSelectedMdx }: Props) => {
-  console.log(data)
-
   return (
     <div className={s.container}>
       <FileTree>
@@ -30,7 +28,7 @@ export const MdxFileSelector = ({ data, selectedMdx, setSelectedMdx }: Props) =>
             <RenderItem
               isFirst={index === 0 && !selectedMdx}
               item={item}
-              key={item.path}
+              key={selectedMdx}
               onFileClick={setSelectedMdx}
               selectedItemPath={selectedMdx}
             />

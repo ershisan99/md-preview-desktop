@@ -23,9 +23,9 @@
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.1",
     "@fontsource/roboto": "^5.0.8",
-    "@it-incubator/md-bundler": "0.0.9",
-    "@it-incubator/mdx-components": "0.0.5",
-    "@it-incubator/ui-kit": "0.2.18",
+    "@it-incubator/md-bundler": "0.0.10",
+    "@it-incubator/mdx-components": "0.0.7",
+    "@it-incubator/ui-kit": "0.2.20",
     "builtin-modules": "^3.3.0",
     "chokidar": "^3.5.3",
     "electron-store": "^8.1.0",
@@ -34,12 +34,9 @@
     "mdx-bundler": "^9.2.1",
     "react-toastify": "^9.1.3",
     "rehype-pretty-code": "^0.10.1",
-    "rehype-slug": "^6.0.0",
-    "sass": "^1.69.4"
+    "rehype-slug": "^6.0.0"
   },
   "devDependencies": {
-    "@electron-toolkit/eslint-config-prettier": "^1.0.1",
-    "@electron-toolkit/eslint-config-ts": "^1.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@it-incubator/eslint-config": "^1.0.1",
     "@it-incubator/prettier-config": "^0.1.2",
@@ -56,6 +53,7 @@
     "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "sass": "^1.69.4",
     "typescript": "^5.2.2",
     "vite": "^4.5.0"
   }

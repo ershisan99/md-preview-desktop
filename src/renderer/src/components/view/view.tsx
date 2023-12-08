@@ -38,7 +38,6 @@ export const View = () => {
     }
 
     const directoryContentsListener: IpcRendererListener = (_event, content) => {
-      console.log('directoryContentsListener', content)
       setDirectoryContents(content)
     }
 
@@ -55,12 +54,16 @@ export const View = () => {
     }
   }, [])
 
+  if (!directoryContents && !code) {
+    return <div>Drag and drop a directory into this window</div>
+  }
+
   return (
     <div className={s.page}>
       <ImagePreview onClose={() => setSrcPreview('')} open={!!srcPreview} src={srcPreview} />
       <div className={s.container}>
         <div className={s.fileSelectorContainer}>
-          {directoryContents && (
+          {directoryContents?.data && (
             <MdxFileSelector
               data={directoryContents.data}
               selectedMdx={selectedFile}
