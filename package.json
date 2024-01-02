@@ -24,7 +24,7 @@
     "@electron-toolkit/utils": "^2.0.1",
     "@fontsource/roboto": "^5.0.8",
     "@it-incubator/md-bundler": "0.0.10",
-    "@it-incubator/mdx-components": "0.0.7",
+    "@it-incubator/mdx-components": "0.0.8",
     "@it-incubator/ui-kit": "0.2.20",
     "builtin-modules": "^3.3.0",
     "chokidar": "^3.5.3",
