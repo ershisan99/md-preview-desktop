@@ -38,7 +38,7 @@ export const TableOfContents = ({ tocMap }: Props) => {
     const headingsObserver = headingsObserverRef.current
 
     setTimeout(() => {
-      document.querySelectorAll('article :is(h1,h2,h3)').forEach(h => headingsObserver.observe(h))
+      document.querySelectorAll('article :is(h2,h3,h4)').forEach(h => headingsObserver.observe(h))
     }, 100)
 
     return () => {
@@ -53,13 +53,22 @@ export const TableOfContents = ({ tocMap }: Props) => {
       // Disconnect and reconnect the observer to refresh it
       headingsObserver.disconnect()
       setTimeout(() => {
-        document.querySelectorAll('article :is(h1,h2,h3)').forEach(h => headingsObserver.observe(h))
+        document.querySelectorAll('article :is(h2,h3,h4)').forEach(h => headingsObserver.observe(h))
       }, 100)
     }
   }, [tocMap])
 
   const onLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
     setCurrentHeading(e.currentTarget.getAttribute('href')!.replace('#', ''))
+    if (headingsObserverRef.current) {
+      const headingsObserver = headingsObserverRef.current
+
+      // Disconnect and reconnect the observer to refresh it
+      headingsObserver.disconnect()
+      setTimeout(() => {
+        document.querySelectorAll('article :is(h2,h3,h4)').forEach(h => headingsObserver.observe(h))
+      }, 100)
+    }
   }
 
   return (
