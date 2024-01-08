@@ -15,16 +15,16 @@
     "dev": "electron-vite dev",
     "build": "npm run typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
-    "build:win": "npm run build && electron-builder --win --config",
-    "build:mac": "electron-vite build && electron-builder --mac --config",
-    "build:linux": "electron-vite build && electron-builder --linux --config"
+    "build:win": "npm run build && electron-builder --win --config --x64",
+    "build:mac": "electron-vite build && electron-builder --mac --config --universal",
+    "build:linux": "electron-vite build && electron-builder --linux --config --x64"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.1",
     "@fontsource/roboto": "^5.0.8",
     "@it-incubator/md-bundler": "0.0.10",
-    "@it-incubator/mdx-components": "0.0.8",
+    "@it-incubator/mdx-components": "0.0.11",
     "@it-incubator/ui-kit": "0.2.20",
     "builtin-modules": "^3.3.0",
     "chokidar": "^3.5.3",
