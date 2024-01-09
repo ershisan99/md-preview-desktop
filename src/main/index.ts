@@ -2,6 +2,7 @@ import fs from 'fs'
 
 import { is } from '@electron-toolkit/utils'
 import { BrowserWindow, app, ipcMain } from 'electron'
+import log from 'electron-log/main'
 
 import { bundleMdxAndSend } from './bundle-mdx-and-send'
 import { handleAppReady } from './handlers/handle-app-ready'
@@ -9,6 +10,11 @@ import { handleWindowAllClosed } from './handlers/handle-window-all-closed'
 import { prepareAndSendDir } from './prepare-and-send-dir'
 import { setupWatcher } from './setup-watcher'
 import { store } from './store'
+
+// Optional, initialize the logger for any renderer process
+log.initialize()
+
+log.info('Log from the main process')
 
 let mainWindow: BrowserWindow | null = null
 
@@ -89,9 +95,12 @@ ipcMain.on('open-file', (_event, filePath) => {
 
 process
   .on('unhandledRejection', (reason, p) => {
-    console.error(reason, 'Unhandled Rejection at Promise', p)
+    log.error('Unhandled Rejection at Promise', reason, p)
+    console.error('Unhandled Rejection at Promise', reason, p)
   })
   .on('uncaughtException', err => {
+    log.error('Uncaught Exception', err)
+
     // https://github.com/paulmillr/chokidar/issues/566
     // this has been open for over 7 years, still hasn't been fixed.
     // for some reason it doesn't even go into the chokidar error handler, so had to do it here
@@ -107,3 +116,5 @@ process
       process.exit(1)
     }
   })
+
+log.errorHandler.startCatching()
